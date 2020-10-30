@@ -5,14 +5,15 @@ import "./index.css";
 
 function GridView() {
     const [limit, setLimit] = useState(50);
-    const [data, setData] = useState({});
+    const [data, setData] = useState([]);
 
     const fetchData = () => {
         let url = `https://api.unsplash.com/search/photos?client_id=MgllgRq7xd3TYgttzB1esqxfnFvC90sn9HLbUTRWclw&query=canada&per_page=${limit}`;
         axios.get(url).then((res) => {
+            debugger;
             console.log(res);
-            setData(res.data);
-            limit+=limit;
+            setData([...res.data.results]);
+            setLimit(limit => limit+limit);
         }).catch((error) => {
             console.error(error);
         }); 
@@ -22,12 +23,17 @@ function GridView() {
         fetchData();
     }, []);
 
+    const refresh = () => {}
+
+    debugger;
     return (
         <InfiniteScroll
-        next={fetchData}
+        // next={fetchData}
         dataLength={limit}
         hasMore={true}
-        loader={<div>Loading........</div>}
+        // loader={<div>Loading........</div>}
+         // below props only if you need pull down functionality
+        refreshFunction={refresh}
         endMessage={
             <p>
                 You have seen it all!
@@ -44,9 +50,9 @@ function GridView() {
             <div>Release to refresh</div>
         }
         >
-            <div className="gridWrap">
-            {data.map((item) => {
-                <img src={} alt="img" loading="lazy"/>
+            <div className="column">
+            {data && data.length > 0 && data.map((item) => {
+                <img src={item.urls.full} alt="img" loading="lazy"/>
             })}
         </div>
         </InfiniteScroll>
