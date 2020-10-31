@@ -1,19 +1,19 @@
 import React, {useEffect, useState} from 'react';
 import InfiniteScroll from "react-infinite-scroll-component";
 import axios from "axios";
-import "./index.css";
+// import "./index.css";
 
-function GridView() {
+function Images() {
     const [limit, setLimit] = useState(50);
     const [data, setData] = useState([]);
+    const [count, setCount] = useState(1);
 
     const fetchData = () => {
         let url = `https://api.unsplash.com/search/photos?client_id=MgllgRq7xd3TYgttzB1esqxfnFvC90sn9HLbUTRWclw&query=canada&per_page=${limit}`;
         axios.get(url).then((res) => {
-            debugger;
             console.log(res);
             setData([...res.data.results]);
-            setLimit(limit => limit+limit);
+            setLimit(limit => limit*count);
         }).catch((error) => {
             console.error(error);
         }); 
@@ -52,11 +52,11 @@ function GridView() {
         >
             <div className="column">
             {data && data.length > 0 && data.map((item) => {
-                <img src={item.urls.full} alt="img" loading="lazy"/>
+                <img key={item.id} src={item.urls.full} alt="img" loading="lazy"/>
             })}
         </div>
         </InfiniteScroll>
     )
 }
 
-export default GridView
+export default Images
